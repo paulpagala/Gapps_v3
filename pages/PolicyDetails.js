@@ -88,33 +88,33 @@ export default function PolicyDetails() {
     array.push(i);
   }
 
-  const [fieldValues, setFieldValues] = React.useState([]);
+    const [fieldValues, setFieldValues] = React.useState([]);
 
-  // Function to handle changes to the text field values
-  const handleFieldValuesChange = (index, event) => {
-    // Create a copy of the field values array
-    const newFieldValues = [...fieldValues];
+    // Function to handle changes to the text field values
+    const handleFieldValuesChange = (index, event) => {
+      // Create a copy of the field values array
+      const newFieldValues = [...fieldValues];
 
-    // Update the value at the specified index
-    newFieldValues[index] = event.target.value;
+      // Update the value at the specified index
+      newFieldValues[index] = event.target.value;
 
-    // Update the state variable with the new field values array
-    setFieldValues(newFieldValues);
-    setParkingSlotNames(newFieldValues);
-  };
-  // Use the map method to create TextField components
-  let textFields = array.map((value, index) => (
-    <Box key={index} sx={{ mb: 3, display: 'flex', flexDirection: "column", alignItems: 'left', alignContent: 'stretch', ml: 2 }}>
-      <Typography variant="subtitle1" sx={{ color: 'black' }} gutterBottom>Slot name {index + 1}</Typography>
-      <TextField
-        key={index + 1}
-        onChange={(event) => handleFieldValuesChange(index, event)}
-        variant="outlined"
-        sx={{ backgroundColor: 'white', width: 326 }}
-        placeholder="Enter Slot Name"
-      />
-    </Box>
-  ));
+      // Update the state variable with the new field values array
+      setFieldValues(newFieldValues);
+      setParkingSlotNames(newFieldValues);
+    };
+    // Use the map method to create TextField components
+    let textFields = array.map((value, index) => (
+      <Box key={index} sx={{ mb: 3, display: 'flex', flexDirection: "column", alignItems: 'left', alignContent: 'stretch', ml: 2 }}>
+        <Typography variant="subtitle1" sx={{ color: 'black' }} gutterBottom>Slot name {index + 1}</Typography>
+        <TextField
+          key={index + 1}
+          onChange={(event) => handleFieldValuesChange(index, event)}
+          variant="outlined"
+          sx={{ backgroundColor: 'white', width: 326 }}
+          placeholder="Enter Slot Name"
+        />
+      </Box>
+    ));
 
   const duplicates = fieldValues.filter((value, index) => fieldValues.indexOf(value) !== index);
 
