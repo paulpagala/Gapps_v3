@@ -61,19 +61,40 @@ export default function AddressForm() {
   };
 
   const [cancelDeadline, setCancelDeadline] = React.useState('');
+  const [errorCancellationDeadline, setErrorCancellationDeadline] = React.useState('');
 
   const handleChangeCancelDeadline = (event) => {
     setCancelDeadline(event.target.value);
     setCancellationRestriction(event.target.value);
+    if (event.target.value) {
+      setErrorCancellationDeadline('')
+    }
+    else {
+      setErrorCancellationDeadline('solid red 5px')
+    }
   };
 
   const [earliestBook, setEarliestBook] = React.useState('');
+  const [errorEarliestDate, setErrorEarliestDate] = React.useState('');
+  
 
   const handleChangeEarliestBook = (event) => {
     setEarliestBook(event.target.value);
     setEarliestDateRestriction(event.target.value)
+    if (event.target.value) {
+      setErrorEarliestDate('')
+    }
+    else {
+      setErrorEarliestDate('solid red 5px')
+    }
+    // } else {
+    //   setErrorEarliestDate(false);
+    // }
   };
 
+  
+ 
+console.log(earliestBook)
 
 
   return (
@@ -155,8 +176,8 @@ export default function AddressForm() {
               }}
               value={earliestBook}
               onChange={handleChangeEarliestBook}
-              sx={{ width: '86px', ml: 3 }}
-              inputProps={{min:0}}
+              sx={{ width: '86px', ml: 3, border:errorEarliestDate, borderRadius:2}}
+              inputProps={{min:0,}}
               placeholder="0"
             />
             <Typography component="subtitle1" variant="subtitle1" sx={{ color: 'black', ml: 3 }}>days before the booking</Typography>
@@ -179,7 +200,7 @@ export default function AddressForm() {
               }}
               value={cancelDeadline}
               onChange={handleChangeCancelDeadline}
-              sx={{ width: '86px', ml: 3 }}
+              sx={{ width: '86px', ml: 3, border: errorCancellationDeadline, borderRadius:2}}
               inputProps={{min:0}}
               placeholder="0"
             />

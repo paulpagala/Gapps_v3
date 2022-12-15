@@ -31,6 +31,7 @@ import TableRow from '@mui/material/TableRow';
 import Link from 'next/link'
 import { useRouter } from 'next/router';
 import { useGlobalContext } from '../context/global';
+import parkingdashboard_image_source from "../public/gaccessillustration.svg"
 
 
 
@@ -295,9 +296,12 @@ export default function ParkingDashboard() {
 
                 <StyledTableRow key={row.parkingAreaName}>
                   <StyledTableCell component="th" scope="row" sx={{ fontSize: 16 }}>
-                    <Link href='/parkingArea' style={{ textDecoration: 'none', color: 'black' }}>{row.parkingAreaName ? row.parkingAreaName : "Not Specified"}</Link>
+                    <Link href='/parkingArea' style={{ textDecoration: 'none', color: 'black',fontStyle: 'italic' }}>{row.parkingAreaName ? row.parkingAreaName : "Not Specified"}</Link>
                   </StyledTableCell>
-                  <StyledTableCell align="left" sx={{ fontSize: 16 }}>{row.address ? row.address : "Not Specified"}</StyledTableCell>
+                  {row.address ? 
+                  (<StyledTableCell align="left" sx={{ fontSize: 16}}>{row.address}</StyledTableCell>) : 
+                  (<StyledTableCell  sx={{fontStyle: 'italic'}}>Not specified</StyledTableCell>) }
+                  {/* <StyledTableCell align="left" sx={{ fontSize: 16 }}>{row.address ? row.address : "Not specified"}</StyledTableCell> */}
                   <StyledTableCell align="left">
                     <Box sx={{ width: 100 }}>
                       {selectedParking ? (<CircleIcon sx={{ fontSize: 10, color: 'grey', mt: 1 }} />) : (<CircleIcon sx={{ fontSize: 10, color: '#00DE9A', mt: 1 }} />)}
@@ -360,6 +364,9 @@ export default function ParkingDashboard() {
           </Box>
         </Paper>
       </TabPanel>
+              
+      <Image src={parkingdashboard_image_source} alt="success_logo" width={500}  style={{ position: 'absolute', bottom: 0, right: 0 }}/>
+     
     </React.Fragment>
 
   )

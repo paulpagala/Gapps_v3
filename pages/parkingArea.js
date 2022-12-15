@@ -29,14 +29,24 @@ import SearchIcon from '@mui/icons-material/Search';
 import { useGlobalContext } from '../context/global';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import Breadcrumbs from '@mui/material/Breadcrumbs';
+import useLocalStorage from "../hooks/useLocalStorage"
+// import { Refresh } from '@mui/icons-material';
+
+// import Link from '@mui/material/Link';
+
 // import axios from 'axios';
 
 
-
+function handleClick(event) {
+  event.preventDefault();
+  console.info('You clicked a breadcrumb.');
+}
 
 
 export default function ParkiongArea() {
-  const {parkingSlotNames,parkingAreaSlots,parkingAreaName,parkingAreaAddress} = useGlobalContext();
+  const router = useRouter();
+  const { parkingSlotNames, parkingAreaSlots, parkingAreaName, parkingAreaAddress } = useGlobalContext();
   const [selected, setSelected] = React.useState(false);
   const [filterActive, setFilterActive] = React.useState();
   const [error, setError] = React.useState("");
@@ -53,8 +63,8 @@ export default function ParkiongArea() {
   // const handleClose = () => {
   //   setAnchorEl(null);
   // };
-  
-   
+
+
 
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -76,10 +86,10 @@ export default function ParkiongArea() {
     },
   }));
 
-  
+
   // useEffect(() => {
-    // const slotNames = JSON.parse(window.localStorage.getItem('slotnames'))
-    // const numberOfSlots = parseInt(JSON.parse(window.localStorage.getItem('numberofslots')))
+  // const slotNames = JSON.parse(window.localStorage.getItem('slotnames'))
+  // const numberOfSlots = parseInt(JSON.parse(window.localStorage.getItem('numberofslots')))
   // },);
 
   // const slotNames = JSON.parse(window.localStorage.getItem('slotnames'))
@@ -118,14 +128,14 @@ export default function ParkiongArea() {
       method: 'GET',
       // mode:'no-cors',
       headers: {
-        'Content-Type':'application/json',
+        'Content-Type': 'application/json',
         // 'Access-Control-Allow-Origin':"*",
       }
     };
     // setIsLoading(true);
     // const gender = "male"
     // const height = "165"
-    fetch('https://zh66xn42vk.execute-api.ap-southeast-1.amazonaws.com/stage/parkingareas',options)
+    fetch('https://zh66xn42vk.execute-api.ap-southeast-1.amazonaws.com/stage/parkingareas', options)
       .then((response) => response.json())
       .then((response) => {
         // setWeight(response.data.Hamwi);
@@ -162,53 +172,75 @@ export default function ParkiongArea() {
     return response.json(); // parses JSON response into native JavaScript objects
   }
 
-  {rows.map((row) => (
-  postSlot('https://zh66xn42vk.execute-api.ap-southeast-1.amazonaws.com/stage/slot',
+  {
+    rows.map((row) => (
+      postSlot('https://zh66xn42vk.execute-api.ap-southeast-1.amazonaws.com/stage/slot',
         {
           "slotId": row.slotId,
           "parkingArea": parkingAreaName,
-          "username":"",
-          "email":""
+          "username": "",
+          "email": ""
         })
         .then((data) => {
           console.log(data); // JSON data parsed by `data.json()` call
-        })))}
+        })))
+  }
+  
+  function routetoEditParking () {
+    router.push("/EditParkingDetail")
+  }
 
+  
+  const [lastRefreshed, setLastRefreshed] = useLocalStorage("lastRefreshed", '');
+
+  // When the button is clicked, update the time
+  function refresh() {
+    const currentDate= new Date();
+    setLastRefreshed(currentDate.toLocaleString());
+  }
 
   return (
     <React.Fragment>
       <Box sx={{ width: "90%", height: "5%", ml: '5%', mr: '5%', mt: '8%', borderRadius: '50%' }}>
-        <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+        {/* <Box sx={{ display: 'flex', flexDirection: 'row' }}>
           <Typography sx={{ color: '#6F8191', fontSize: 17 }}>Parking</Typography>
           <Typography sx={{ color: '#6E7C9D', ml: '1%', fontSize: 17 }}>{'>'}</Typography>
-          <Typography sx={{ color: '#222222', fontWeight: 'bold', ml: '1%', fontSize: 17 }}>{parkingAreaName}</Typography>
-          {/* <Typography sx={{color:'black'}}>{data}</Typography> */}
-        </Box>
+          <Typography sx={{ color: '#222222', fontWeight: 'bold', ml: '1%', fontSize: 17 }}>{parkingAreaName}</Typography> */}
+        {/* <Typography sx={{color:'black'}}>{data}</Typography> */}
+        {/* </Box> */}
+        <div role="presentation" onClick={handleClick}>
+        <Breadcrumbs separator = '>' aria-label="breadcrumb">
+        <Link href='/parkingDashboard' style={{ textDecoration: 'none', color: '#6F8191', fontSize:19 }}>
+            Parking
+          </Link>
+          <Typography color="text.primary" sx={{fontSize:19}}>{parkingAreaName}</Typography>
+        </Breadcrumbs>
+        </div>
         <Paper variant="outlined" sx={{ my: { md: 1, lg: 3 }, p: { md: 2, lg: 3 } }}>
           <Box sx={{ display: 'flex', flexDireciton: 'row', ml: 2 }}>
-            <Box sx={{width:350}}>
-            <Typography component="h3" variant="h3" align="left" sx={{ color: 'black', fontWeight: 'bold' }}>
-              {parkingAreaName}
-            </Typography>
+            <Box sx={{ width: 550 }}>
+              <Typography component="h3" variant="h3" align="left" sx={{ color: 'black', fontWeight: 'bold' }}>
+                {parkingAreaName}
+              </Typography>
             </Box>
-            
+
             <ToggleButton
               value="check"
               selected={selected}
               onChange={() => {
                 setSelected(!selected);
               }}
-              sx={{ ml: "50%", borderColor: '#61B6EC', borderRadius: 2 }}
+              sx={{ ml: "40%", borderColor: '#61B6EC', borderRadius: 2 }}
             >
               <Typography sx={{ color: "#61B6EC", fontSize: 17 }}>Switch to inactive</Typography>
             </ToggleButton>
-            <Button variant="outlined" sx={{ ml: 5, width: '100px', borderRadius: 2 }}>
+            <Button variant="outlined" sx={{ ml: 3, width: '100px', borderRadius: 2 }} onclick={routetoEditParking}>
               <Typography sx={{ color: "#61B6EC", fontSize: 17 }}>Edit</Typography>
             </Button>
-            <Button variant="outlined" sx={{ ml: 5, width: '100px', borderRadius: 2 }}>
+            <Button variant="outlined" sx={{ ml: 3, width: '100px', borderRadius: 2 }}>
               <Typography sx={{ color: "#61B6EC", fontSize: 17 }}>Delete</Typography>
             </Button>
-            
+
           </Box>
 
 
@@ -235,7 +267,11 @@ export default function ParkiongArea() {
           </Box>
         </Paper>
       </Box>
-      <Typography sx={{ fontWeight: 'bold', ml: '5%', color: 'black', pb: 2 }}> Area floors</Typography>
+      <Box sx={{display:'flex',flexDirection:'row',alignItems:'center',pb:2}}>
+      <Typography sx={{ fontWeight: 'bold', ml: '5%', color: 'black',fontSize:'19px' }}> Area floors</Typography>
+      <Typography sx={{color:'black',fontSize:'19px',ml:'64.5%'}}>{lastRefreshed.toLocaleString()}</Typography>
+      <Button variant="outlined" onClick={refresh} sx={{fontSize:'19px',borderRadius: 2,color:"#61B6EC",ml:2}} >Refresh now</Button>
+      </Box>
       <Box sx={{ width: '90%', margin: 'auto' }}>
         <Accordion defaultExpanded>
           <AccordionSummary
@@ -287,15 +323,15 @@ export default function ParkiongArea() {
                 </TableHead>
                 <TableBody>
                   {rows.map((row) => (
-
                     <StyledTableRow key={row.slotId}>
                       <StyledTableCell component="th" scope="row" sx={{ fontSize: 16 }}>
-                        <Link href='/parkingArea' style={{ textDecoration: 'none', color: 'black' }}>{row.slotId}</Link>
+                        {/* <Link href='/parkingArea' style={{ textDecoration: 'none', color: 'black' }}>{row.slotId}</Link> */}
+                        {row.slotId}
                       </StyledTableCell>
                       <StyledTableCell align="left" sx={{ fontSize: 16 }}>{row.slotName}</StyledTableCell>
                       <StyledTableCell align="left">
                         <Box sx={{ width: 200 }}>
-                          {(parkingAreaSlots > slotApi) && row.slotId === "MCHD001" ? (<CircleIcon sx={{ fontSize: 10, color: '#FF0080', mt: 1 }} />) : (<CircleIcon sx={{ fontSize: 10, color: '#00DE9A', mt: 1 }} />) }
+                          {(parkingAreaSlots > slotApi) && row.slotId === "MCHD001" ? (<CircleIcon sx={{ fontSize: 10, color: '#FF0080', mt: 1 }} />) : (<CircleIcon sx={{ fontSize: 10, color: '#00DE9A', mt: 1 }} />)}
                           <Typography component="subtitle1" variant="subtitle1" sx={{ ml: 0.5 }} >
                             {(parkingAreaSlots > slotApi) && row.slotId === "MCHD001" ? "Booked" : (row.status)}
                           </Typography>

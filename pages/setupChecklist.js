@@ -50,7 +50,21 @@ function getStepContent(step) {
 const theme = createTheme();
 
 export default function Checkout() {
-  const {parkingAreaName,parkingAreaAddress,parkingAreaSlots} = useGlobalContext();
+  const {
+    parkingAreaName,
+    parkingAreaAddress,
+    parkingAreaSlots,
+    paymentRestriction,
+    cancellationRestriction,
+    earliestDateRestriction,
+    checkInOptions,
+    checkInRestriction,
+    checkInAndOutRestriction,
+    dailyCheckInRestriction,
+    dailyCheckInAndOutRestriction,
+    paidAmount,
+    gcashNumber
+  } = useGlobalContext();
   const [activeStep, setActiveStep] = React.useState(0);
   const handleNext = () => {
     setActiveStep(activeStep + 1);
@@ -96,7 +110,18 @@ if (activeStep===3) {
         {
           "parkingArea": parkingAreaName,
           "parkingAddress": parkingAreaAddress,
-          "slots": parseInt(parkingAreaSlots)
+          "dedicateSlots":parseInt(parkingAreaSlots),
+          "slots": parseInt(parkingAreaSlots),
+          "paymentRestriction" : paymentRestriction,
+          "paymentAmount": paidAmount,
+          "gcashNumber": gcashNumber,
+          "cancellationRestriction" : cancellationRestriction,
+          "earliestDateRestriction" : earliestDateRestriction,
+          "checkInOptions": checkInOptions,
+          "checkInHealthRestriction" : checkInRestriction,
+          "checkInAndOutHealthRestriction" : checkInAndOutRestriction,
+          "dailyCheckInRestriction" : dailyCheckInRestriction,
+          "dailyCheckInAndOutRestriction" : dailyCheckInAndOutRestriction
         })
         .then((data) => {
           console.log(data); // JSON data parsed by `data.json()` call
@@ -133,7 +158,19 @@ if (activeStep===3) {
 
       <Stepper activeStep={activeStep} sx={{ pt: 1, pb: 1, width: '50%', ml: 3, mt: 5 }} alternativeLabel>
         {steps.map((label) => (
-          <Step key={label} sx={{ fontSize: 40 }}>
+          <Step key={label} sx={{ fontSize: 40,".css-1u4zpwo-MuiSvgIcon-root-MuiStepIcon-root.Mui-active": {
+            color: "#1976d2",
+  
+            outlineWidth: "1.5px",
+            outlineColor: "#0064D8",
+            outlineStyle: "solid",
+            outlineOffset: "5px",
+            borderRadius: "18px"
+          },
+          "svg:not(:root)":{
+            fontSize: "100%",
+            mt:-1
+          },   }}>
             <StepLabel>{label}</StepLabel>
           </Step>
         ))}
