@@ -105,22 +105,11 @@ export default function ParkiongArea() {
   }
 
   const rows = [];
-  for (let i = 1; i <= parkingAreaSlots; i++) {
-    // Add each number to the array
-    rows.push(createData('MCHD00' + i, parkingSlotNames[i - 1], 'Available', 'pj'));
-  }
+  // for (let i = (parkingAreaSlots - slotApi); i <= parkingAreaSlots; i++) {
+  //   // Add each number to the array
+  //   rows.push(createData('MCHD00' + i, parkingSlotNames[i - 1], 'Available', 'pj'));
+  // }
 
-  // let textFields = array.map((value, index) => (
-
-  // ));
-  // const rows = [
-  //   createData('MCHD001', 'N/A', 'Active', 'pj'),
-  //   // createData('The Globe Tower', 'Not Specified', 'Active','pj'),
-  //   // createData('Three Parkade', 'H23X+5HH, Taguig, Metro Manila','Active','pj'),
-  // ];
-  //   const {serviceFee} = useGlobalContext();
-
-  // console.log(slotNames[0])
 
   const [slotApi, setSlotApi] = React.useState()
   function FindSlotNumbers() {
@@ -140,7 +129,7 @@ export default function ParkiongArea() {
       .then((response) => {
         // setWeight(response.data.Hamwi);
         // console.log(response.ParkingAreas[5].slots);
-        console.log(response.ParkingAreas)
+        // console.log(response.ParkingAreas)
         setSlotApi(response.ParkingAreas[0].slots);
         // console.log(response)
         // console.log(slotApi)
@@ -189,6 +178,16 @@ export default function ParkiongArea() {
   function routetoEditParking () {
     router.push("/EditParkingDetail")
   }
+  const bookedRow = [] 
+  for (let i=1; i <= (parkingAreaSlots - slotApi) ; i++) {
+    bookedRow.push(createData('MCHD00' + i, parkingSlotNames[i - 1], 'Booked', 'pj'));
+  }
+  for (let i = (parkingAreaSlots - slotApi); i < parkingAreaSlots; i++) {
+    // Add each number to the array
+    rows.push(createData('MCHD00' + i, parkingSlotNames[i-1], 'Available', 'pj'));
+  }
+  
+ 
 
   
   const [lastRefreshed, setLastRefreshed] = useLocalStorage("lastRefreshed", '');
@@ -198,6 +197,9 @@ export default function ParkiongArea() {
     const currentDate= new Date();
     setLastRefreshed(currentDate.toLocaleString());
   }
+  // console.log(parkingAreaSlots)
+  // console.log(slotApi)
+  // console.log(bookedRow)
 
   return (
     <React.Fragment>
@@ -230,7 +232,7 @@ export default function ParkiongArea() {
               onChange={() => {
                 setSelected(!selected);
               }}
-              sx={{ ml: "40%", borderColor: '#61B6EC', borderRadius: 2 }}
+              sx={{ ml: "auto", borderColor: '#61B6EC', borderRadius: 2 }}
             >
               <Typography sx={{ color: "#61B6EC", fontSize: 17 }}>Switch to inactive</Typography>
             </ToggleButton>
@@ -268,9 +270,9 @@ export default function ParkiongArea() {
         </Paper>
       </Box>
       <Box sx={{display:'flex',flexDirection:'row',alignItems:'center',pb:2}}>
-      <Typography sx={{ fontWeight: 'bold', ml: '5%', color: 'black',fontSize:'19px' }}> Area floors</Typography>
-      <Typography sx={{color:'black',fontSize:'19px',ml:'64.5%'}}>{lastRefreshed.toLocaleString()}</Typography>
-      <Button variant="outlined" onClick={refresh} sx={{fontSize:'19px',borderRadius: 2,color:"#61B6EC",ml:2}} >Refresh now</Button>
+      <Typography sx={{ fontWeight: 'bold', ml: '5%', color: 'black',fontSize:'17px' }}> Area floors</Typography>
+      <Typography sx={{color:'black',fontSize:'17px',ml:'auto'}}>Last updated: {lastRefreshed.toLocaleString()}</Typography>
+      <Button variant="outlined" onClick={refresh} sx={{fontSize:'17px',borderRadius: 2,color:"#61B6EC",ml:2,mr:10}} >Refresh now</Button>
       </Box>
       <Box sx={{ width: '90%', margin: 'auto' }}>
         <Accordion defaultExpanded>
@@ -310,7 +312,7 @@ export default function ParkiongArea() {
                     <MenuItem value={false}>Inactive</MenuItem>
                   </Select>
                 </FormControl>
-                <Button variant="text" sx={{ ml: '57%', textDecoration: 'underline', color: '#5BADFA', fontSize: 17 }}>+Add new slot</Button>
+                <Button variant="text" sx={{ ml: 'auto',mr:2, textDecoration: 'underline', color: '#5BADFA', fontSize: 17 }}>+Add new slot</Button>
               </Box>
               <Table sx={{ minWidth: 500 }} aria-label="customized table">
                 <TableHead>
@@ -322,6 +324,26 @@ export default function ParkiongArea() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
+                {bookedRow.map ((booked) => (
+                     <StyledTableRow key={booked.slotId}>
+                     <StyledTableCell component="th" scope="row" sx={{ fontSize: 16 }}>
+                       {/* <Link href='/parkingArea' style={{ textDecoration: 'none', color: 'black' }}>{row.slotId}</Link> */}
+                       {booked.slotId}
+                     </StyledTableCell>
+                     <StyledTableCell align="left" sx={{ fontSize: 16 }}>{booked.slotName}</StyledTableCell>
+                     <StyledTableCell align="left">
+                       <Box sx={{ width: 200 }}>
+                         <CircleIcon sx={{ fontSize: 10, color: '#FF0080', mt: 1 }} /> 
+                         <Typography component="subtitle1" variant="subtitle1" sx={{ ml: 0.5 }} >
+                           Booked
+                         </Typography>
+                       </Box>
+                     </StyledTableCell>
+                     <StyledTableCell align="left">
+                       <Button variant="text" sx={{ textDecoration: 'underline', color: '#5BADFA', fontSize: 17 }}>Delete</Button>
+                     </StyledTableCell>
+                   </StyledTableRow>
+                  ))}
                   {rows.map((row) => (
                     <StyledTableRow key={row.slotId}>
                       <StyledTableCell component="th" scope="row" sx={{ fontSize: 16 }}>
@@ -331,9 +353,9 @@ export default function ParkiongArea() {
                       <StyledTableCell align="left" sx={{ fontSize: 16 }}>{row.slotName}</StyledTableCell>
                       <StyledTableCell align="left">
                         <Box sx={{ width: 200 }}>
-                          {(parkingAreaSlots > slotApi) && row.slotId === "MCHD001" ? (<CircleIcon sx={{ fontSize: 10, color: '#FF0080', mt: 1 }} />) : (<CircleIcon sx={{ fontSize: 10, color: '#00DE9A', mt: 1 }} />)}
+                          <CircleIcon sx={{ fontSize: 10, color: '#00DE9A', mt: 1 }} />
                           <Typography component="subtitle1" variant="subtitle1" sx={{ ml: 0.5 }} >
-                            {(parkingAreaSlots > slotApi) && row.slotId === "MCHD001" ? "Booked" : (row.status)}
+                            {row.status}
                           </Typography>
                         </Box>
                       </StyledTableCell>
@@ -341,8 +363,9 @@ export default function ParkiongArea() {
                         <Button variant="text" sx={{ textDecoration: 'underline', color: '#5BADFA', fontSize: 17 }}>Delete</Button>
                       </StyledTableCell>
                     </StyledTableRow>
-
                   ))}
+
+                 
                 </TableBody>
               </Table>
             </TableContainer>

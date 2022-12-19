@@ -191,7 +191,7 @@ export default function ParkingDashboard() {
               onChange={() => {
                 setSelected(!selected);
               }}
-              sx={{ ml: 145, borderColor: '#61B6EC' }}
+              sx={{ ml: 100, borderColor: '#61B6EC' }}
             >
               <Typography sx={{ color: "#61B6EC", fontSize: 17 }}>Switch to inactive</Typography>
             </ToggleButton>
@@ -247,7 +247,7 @@ export default function ParkingDashboard() {
               <MenuItem value={false}>Inactive</MenuItem>
             </Select>
           </FormControl>
-          <Box sx={{ ml: '70%' }}>
+          <Box sx={{ ml: '63%' }}>
             <Button
               id="demo-customized-button"
               aria-controls={open ? 'demo-customized-menu' : undefined}
@@ -296,7 +296,7 @@ export default function ParkingDashboard() {
 
                 <StyledTableRow key={row.parkingAreaName}>
                   <StyledTableCell component="th" scope="row" sx={{ fontSize: 16 }}>
-                    <Link href='/parkingArea' style={{ textDecoration: 'none', color: 'black',fontStyle: 'italic' }}>{row.parkingAreaName ? row.parkingAreaName : "Not Specified"}</Link>
+                    <Link href='/parkingArea' style={{ textDecoration: 'none', color: 'black' }}>{row.parkingAreaName ? row.parkingAreaName : "Not Specified"}</Link>
                   </StyledTableCell>
                   {row.address ? 
                   (<StyledTableCell align="left" sx={{ fontSize: 16}}>{row.address}</StyledTableCell>) : 
@@ -365,7 +365,7 @@ export default function ParkingDashboard() {
         </Paper>
       </TabPanel>
               
-      <Image src={parkingdashboard_image_source} alt="success_logo" width={500}  style={{ position: 'absolute', bottom: 0, right: 0 }}/>
+      <Image src={parkingdashboard_image_source} alt="success_logo" width={500}  style={{ position: 'relative', marginLeft:"67%" }}/>
      
     </React.Fragment>
 
